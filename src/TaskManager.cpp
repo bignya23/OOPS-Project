@@ -46,7 +46,8 @@ bool TaskManager::updateTasks(int id, std::string new_title, std::string new_des
 }
 
 void TaskManager::displayTasks() const
-{
+{   
+    
     if (tasks.empty())
     {
         std::cout << "No tasks available.\n";
@@ -90,4 +91,9 @@ void TaskManager::deleteTasks()
 
 void TaskManager::sortOnPriority() {
     
+}
+
+
+std::vector<Task*>& TaskManager::getTasks() {
+    return tasks;
 }

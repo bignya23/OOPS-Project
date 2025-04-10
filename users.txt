@@ -1,2 +1,0 @@
-big,22
-Ritik,abc

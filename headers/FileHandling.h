@@ -7,6 +7,6 @@
 
 class FileHandler {
 public:
-    static void saveTasksToFile(const std::vector<std::unique_ptr<Task>> &tasks, const std::string &filename);
-    static void loadTasksFromFile(std::vector<std::unique_ptr<Task>> &tasks, const std::string &filename);
+    static void saveTasksToFile(const std::vector<Task*> &tasks, const std::string &filename);
+    static void loadTasksFromFile(std::vector<Task*> &tasks, const std::string &filename);
 };

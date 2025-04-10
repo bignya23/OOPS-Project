@@ -90,7 +90,6 @@ bool Task::isOverdue() const
 
 void Task::display() const
 {
-    std::cout << "Basic Task : \n";
     std::cout << "Task #" << task_no << " - " << task_title << "\n"
               << "Description: " << task_description << "\n"
               << "Due Date: " << getDueDate() << (isOverdue() ? " (Overdue!)" : "") << "\n"

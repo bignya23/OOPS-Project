@@ -3,6 +3,7 @@
 #include "headers/Task.h"
 #include "headers/TaskManager.h"
 #include "headers/UserManager.h"
+#include "headers/FileHandling.h"
 
 int main()
 {
@@ -27,7 +28,6 @@ int main()
             userManager.addUser(username, password);
             userManager.saveUsersToFile("../files/users.txt");
             std::cout << "User registered successfully!\n";
-
             break;
         case 2:
             std::cout << "Enter username: ";
@@ -67,6 +67,8 @@ int main()
     std::cout << " To Advanced Task Manager___________\n\n";
     UI::getDisplayMenu();
     int taskType;
+    FileHandler *fileHandler = new FileHandler();
+    std::vector<Task*>& tasks = taskManager->getTasks();
 
     while (true)
     {
@@ -74,7 +76,7 @@ int main()
         {
             int choice = UI::checkvalidchoice();
             std::cout << "You have Selected Choice : " << choice << std::endl;
-            std::unique_ptr<Task> new_task;
+
             switch (choice)
             {
             case 0:
@@ -86,14 +88,16 @@ int main()
                 std::cout << "2. Work Task\n";
                 std::cout << "Enter your choice: ";
                 std::cin >> taskType;
-                std::cin.ignore(); 
+                std::cin.ignore();
 
-                Task* newTask;
-                
-                if (taskType == 1) {
+                Task *newTask;
+
+                if (taskType == 1)
+                {
                     newTask = UI::createTaskUI();
-                } 
-                else if (taskType == 2) {
+                }
+                else if (taskType == 2)
+                {
                     newTask = UI::createWorkTaskUI();
                 }
                 else
@@ -103,6 +107,7 @@ int main()
                 }
                 taskManager->addTasks(newTask);
                 std::cout << "------------------------" << std::endl;
+                fileHandler->saveTasksToFile(tasks, "../files/" + username + ".txt");
                 std::cout << "Task Added Successfully!" << std::endl;
                 break;
             case 2:
@@ -112,7 +117,20 @@ int main()
                 taskManager->deleteTasks();
                 break;
             case 4:
-                taskManager->displayTasks();
+                tasks.clear();
+                fileHandler->loadTasksFromFile(tasks, "../files/" + username + ".txt");
+                if (tasks.empty())
+                {
+                    std::cout << "No tasks available.\n";
+                    break;
+                }
+
+                std::cout << "------- Task List -------\n";
+                for (const auto &task : tasks)
+                {
+                    task->display();
+                    std::cout << "-------------------------\n";
+                }
                 break;
             case 5:
                 start = false;
