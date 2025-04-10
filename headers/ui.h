@@ -5,14 +5,15 @@
 #include "../headers/TaskManager.h"
 
 class UI {
-private:
-
 
 public:
     static void getDisplayMenu();
     static int checkvalidchoice();
-    static std::unique_ptr<Task> createTaskUI();
+    static Task* createTaskUI();
+    static WorkTask* createWorkTaskUI();
     static void updateTaskUI(TaskManager& taskManager);
+    static void displayUserMenu();
+    static int checkValidUserChoice();
 };
 
 

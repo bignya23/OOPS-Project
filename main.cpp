@@ -7,56 +7,57 @@
 int main()
 {
     UserManager userManager;
-    userManager.loadUsersFromFile("../users.txt");
+    userManager.loadUsersFromFile("../files/users.txt");
 
-    int choice;
     std::string username, password;
     bool login = false;
-    while (true) {
-        std::cout << "\n------- User Management System -------\n";
-        std::cout << "1. Register User\n";
-        std::cout << "2. Login User\n";
-        std::cout << "3. Exit\n";
-        std::cout << "Enter your choice: ";
-        std::cin >> choice;
+    while (true)
+    {
+        UI::displayUserMenu();
+        int choice = UI::checkValidUserChoice();
 
-        switch (choice) {
-            case 1:
-                std::cout << "Enter username: ";
-                std::cin >> username;
-                std::cout << "Enter password: ";
-                std::cin >> password;
+        switch (choice)
+        {
+        case 1:
+            std::cout << "Enter username: ";
+            std::cin >> username;
+            std::cout << "Enter password: ";
+            std::cin >> password;
 
-                userManager.addUser(username, password);
-                userManager.saveUsersToFile("../users.txt");
-                std::cout << "User registered successfully!\n";
-             
-                break;
-            case 2:
-                std::cout << "Enter username: ";
-                std::cin >> username;
-                std::cout << "Enter password: ";
-                std::cin >> password;
+            userManager.addUser(username, password);
+            userManager.saveUsersToFile("../files/users.txt");
+            std::cout << "User registered successfully!\n";
 
-                if (userManager.authenticateUser(username, password)) {
-                    std::cout << "Login successful!\n\n";
-                    std::cout << "___________Welcome " << username;
-                    login = true;
-                } else {
-                    std::cout << "Invalid username or password!\n";
-                }
-                
-                break;
+            break;
+        case 2:
+            std::cout << "Enter username: ";
+            std::cin >> username;
+            std::cout << "Enter password: ";
+            std::cin >> password;
 
-            case 3:
-                std::cout << "Exiting program...\n";
-                return 0;
+            if (userManager.authenticateUser(username, password))
+            {
+                std::cout << "Login successful!\n\n";
+                std::cout << "___________Welcome " << username;
+                login = true;
+            }
+            else
+            {
+                std::cout << "Invalid username or password!\n";
+            }
 
-            default:
-                std::cout << "Invalid choice! Try again.\n";
+            break;
+
+        case 3:
+            std::cout << "Exiting program...\n";
+            return 0;
+
+        default:
+            std::cout << "Invalid choice! Try again.\n";
         }
 
-        if(login == true) {
+        if (login == true)
+        {
             break;
         }
     }
@@ -65,6 +66,8 @@ int main()
     bool start = true;
     std::cout << " To Advanced Task Manager___________\n\n";
     UI::getDisplayMenu();
+    int taskType;
+
     while (true)
     {
         if (start)
@@ -78,8 +81,27 @@ int main()
                 UI::getDisplayMenu();
                 break;
             case 1:
-                new_task = UI::createTaskUI();
-                taskManager->addTasks(std::move(new_task));
+                std::cout << "Select Task Type:\n";
+                std::cout << "1. Standard Task\n";
+                std::cout << "2. Work Task\n";
+                std::cout << "Enter your choice: ";
+                std::cin >> taskType;
+                std::cin.ignore(); 
+
+                Task* newTask;
+                
+                if (taskType == 1) {
+                    newTask = UI::createTaskUI();
+                } 
+                else if (taskType == 2) {
+                    newTask = UI::createWorkTaskUI();
+                }
+                else
+                {
+                    std::cout << "Invalid task type selected.\n";
+                    break;
+                }
+                taskManager->addTasks(newTask);
                 std::cout << "------------------------" << std::endl;
                 std::cout << "Task Added Successfully!" << std::endl;
                 break;

@@ -1,9 +1,9 @@
 #include "../headers/TaskManager.h"
 #include "../headers/Task.h"
 
-void TaskManager::addTasks(std::unique_ptr<Task> new_task)
+void TaskManager::addTasks(Task* new_task)
 {
-    tasks.push_back(std::move(new_task));
+    tasks.push_back(new_task);
 }
 
 bool TaskManager::updateTasks(int id, std::string new_title, std::string new_description, std::string new_duedate, std::string new_isCompleted, int new_priority)
@@ -75,10 +75,10 @@ void TaskManager::deleteTasks()
     std::cin >> id;
     std::cin.ignore();
 
-    std::vector<std::unique_ptr<Task>> new_tasks;
+    std::vector<Task*> new_tasks;
 
     tasks.erase(std::remove_if(tasks.begin(), tasks.end(),
-                               [id](const std::unique_ptr<Task> &task)
+                               [id](Task* &task)
                                {
                                    return task->getId() == id;
                                }),

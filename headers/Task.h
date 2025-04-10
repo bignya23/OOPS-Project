@@ -17,12 +17,13 @@ protected:
     int priority;
 
 public:
-    Task::Task(int id, const std::string &title, const std::string &description,
-               const std::string &dueDate, bool isCompleted, int priority)
+    explicit Task::Task(int id, const std::string &title, const std::string &description,
+                        const std::string &dueDate, bool isCompleted, int priority)
         : task_no(id), task_title(title), task_description(description),
-          isCompleted(isCompleted), priority(priority) {
-                this->setDueDate(dueDate);
-          }
+          isCompleted(isCompleted), priority(priority)
+    {
+        this->setDueDate(dueDate);
+    }
 
     virtual ~Task();
 
@@ -41,22 +42,28 @@ public:
     void setPriority(int new_priority);
 
     bool isOverdue() const;
-    void display() const;
+    virtual void display() const;
 };
 
 class WorkTask : public Task
 {
 private:
     std::string project_name;
-    std::string project_decription;
+    std::string project_description;
 
 public:
-    WorkTask(int id, const std::string &title, const std::string &description,
-             const std::string &dueDate, const std::string &projectName)
-        : Task(id, title, description, dueDate, isCompleted, priority), project_name(projectName), project_decription(project_decription) {}
+    explicit WorkTask(int id, const std::string &title, const std::string &description,
+                      const std::string &dueDate, bool isCompleted, int priority,
+                      const std::string &projectName, const std::string &projectDescription)
+        : Task(id, title, description, dueDate, isCompleted, priority),
+          project_name(projectName), project_description(projectDescription) {}
 
-    void getProjectName() const;
-    void getProjectDes() const;
-    void setProjectName() const;
-    void setProjectDes() const;
+    std::string getProjectDescription() const;
+    std::string getProjectTitle() const;
+
+    void setProjectDescription(const std::string &project_description);
+    void setProjectTitle(const std::string &project_title);
+
+    void display() const override;
+
 };
