@@ -1,4 +1,6 @@
 #include <iostream>
+#include <algorithm>
+#include <cstdio>
 #include "headers/ui.h"
 #include "headers/Task.h"
 #include "headers/TaskManager.h"
@@ -68,7 +70,9 @@ int main()
     UI::getDisplayMenu();
     int taskType;
     FileHandler *fileHandler = new FileHandler();
-    std::vector<Task*>& tasks = taskManager->getTasks();
+    std::vector<Task *> &tasks = taskManager->getTasks();
+    fileHandler->loadTasksFromFile(tasks, "../files/" + username + ".txt");
+    fileHandler->saveTasksToFile(tasks, "../files/" + username + ".txt");
 
     while (true)
     {
@@ -114,23 +118,14 @@ int main()
                 UI::updateTaskUI(*taskManager);
                 break;
             case 3:
-                taskManager->deleteTasks();
+                taskManager->deleteTasks(tasks);
+                fileHandler->saveTasksToFile(tasks, "../files/" + username + ".txt");
                 break;
             case 4:
                 tasks.clear();
                 fileHandler->loadTasksFromFile(tasks, "../files/" + username + ".txt");
-                if (tasks.empty())
-                {
-                    std::cout << "No tasks available.\n";
-                    break;
-                }
-
-                std::cout << "------- Task List -------\n";
-                for (const auto &task : tasks)
-                {
-                    task->display();
-                    std::cout << "-------------------------\n";
-                }
+                taskManager->sortOnPriority(tasks);
+                taskManager->displayTasks(tasks);
                 break;
             case 5:
                 start = false;

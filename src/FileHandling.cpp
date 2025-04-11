@@ -5,7 +5,7 @@
 #include <stdexcept>
 
 void FileHandler::saveTasksToFile(const std::vector<Task*> &tasks, const std::string &filename) {
-    std::ofstream outFile(filename, std::ios::app);
+    std::ofstream outFile(filename, std::ios::out);
     if (!outFile) {
         throw std::runtime_error("Could not open file for writing: " + filename);
     }
@@ -85,4 +85,35 @@ void FileHandler::loadTasksFromFile(std::vector<Task*> &tasks, const std::string
     }
     
     inFile.close();
+}
+
+
+void FileHandler::saveTasksToFileOverwrite(const std::vector<Task*> &tasks, const std::string &filename) {
+    std::ofstream outFile(filename, std::ios::out);
+    if (!outFile) {
+        throw std::runtime_error("Could not open file for writing: " + filename);
+    }
+    
+    for (const auto &task : tasks) {
+        if (auto workTask = dynamic_cast<WorkTask*>(task)) {
+            outFile << "WorkTask" << "\n";
+            outFile << workTask->getId() << "\n";
+            outFile << workTask->getTitle() << "\n";
+            outFile << workTask->getDescription() << "\n";
+            outFile << workTask->getDueDate() << "\n";
+            outFile << workTask->getStatus() << "\n"; 
+            outFile << workTask->getPriority() << "\n";
+            outFile << workTask->getProjectTitle() << "\n";
+            outFile << workTask->getProjectDescription() << "\n";
+        } else {
+            outFile << "Task" << "\n";
+            outFile << task->getId() << "\n";
+            outFile << task->getTitle() << "\n";
+            outFile << task->getDescription() << "\n";
+            outFile << task->getDueDate() << "\n";
+            outFile << task->getStatus() << "\n";  
+            outFile << task->getPriority() << "\n";
+        }
+    }
+    outFile.close();
 }

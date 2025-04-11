@@ -16,11 +16,11 @@ public:
 
     bool updateTasks(int id, std::string new_title, std::string new_description, std::string new_duedate, std::string new_isCompleted, int new_priority);
     std::vector<Task*>& getTasks();
-    void deleteTasks();
+    void deleteTasks(std::vector<Task*> &tasks);
 
-    void displayTasks() const;
+    void displayTasks(std::vector<Task*> &tasks);
 
-    void sortOnPriority(); 
+    void sortOnPriority(std::vector<Task*> &tasks); 
 
 
 };

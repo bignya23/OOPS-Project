@@ -1,6 +1,6 @@
 #include "../headers/TaskManager.h"
 #include "../headers/Task.h"
-
+#include <algorithm>
 void TaskManager::addTasks(Task* new_task)
 {
     tasks.push_back(new_task);
@@ -45,7 +45,7 @@ bool TaskManager::updateTasks(int id, std::string new_title, std::string new_des
     return false;
 }
 
-void TaskManager::displayTasks() const
+void TaskManager::displayTasks(std::vector<Task*> &tasks)
 {   
     
     if (tasks.empty())
@@ -62,7 +62,7 @@ void TaskManager::displayTasks() const
     }
 }
 
-void TaskManager::deleteTasks()
+void TaskManager::deleteTasks(std::vector<Task*> &tasks)
 {
     if (tasks.empty())
     {
@@ -70,7 +70,7 @@ void TaskManager::deleteTasks()
         return;
     }
 
-    displayTasks();
+    displayTasks(tasks);
     int id;
     std::cout << "Enter the id of the task to delete : ";
     std::cin >> id;
@@ -78,19 +78,21 @@ void TaskManager::deleteTasks()
 
     std::vector<Task*> new_tasks;
 
-    tasks.erase(std::remove_if(tasks.begin(), tasks.end(),
-                               [id](Task* &task)
-                               {
-                                   return task->getId() == id;
-                               }),
-                tasks.end());
+    for(auto& task : tasks) {
+        if(task->getId() != id) {
+            new_tasks.push_back(task);
+        }
+    }
+    tasks = new_tasks;
 
-    std::cout << "Task Deleted Successfully !!!";
+    std::cout << "Task Deleted Successfully !!!\n";
 }
 
 
-void TaskManager::sortOnPriority() {
-    
+void TaskManager::sortOnPriority(std::vector<Task*> &tasks) {
+    sort(tasks.begin(), tasks.end(), [&](Task* first, Task* second) {
+        return first->getPriority() < second->getPriority();
+    });
 }
 
 
