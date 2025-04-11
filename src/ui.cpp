@@ -80,23 +80,41 @@ int UI::checkValidUserChoice() {
     return choice;
 }
 
-
-void UI::updateTaskUI(TaskManager &taskManager)
+ 
+void UI::updateTaskUI(std::vector<Task*>& tasks)
 {
-    int id, priority;
-    std::string new_title, new_description, new_duedate, new_isCompleted;
+    int id;
+    std::string input;
 
     std::cout << "Enter Task ID to update: ";
     std::cin >> id;
-    std::cin.ignore();
-
     if (std::cin.fail())
     {
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         std::cout << "Invalid input! Please enter a valid number.\n";
-        UI::updateTaskUI(taskManager);
+        updateTaskUI(tasks);
+        return;
     }
+    std::cin.ignore(); 
+
+    Task* taskToUpdate = nullptr;
+    for (auto &task : tasks)
+    {
+        if (task->getId() == id)
+        {
+            taskToUpdate = task;
+            break;
+        }
+    }
+
+    if (!taskToUpdate)
+    {
+        std::cout << "Task with ID " << id << " not found.\n";
+        return;
+    }
+
+    std::string new_title, new_description, new_dueDate, new_isCompleted, new_priority;
 
     std::cout << "Enter new Title (leave empty to keep unchanged): ";
     std::getline(std::cin, new_title);
@@ -105,24 +123,62 @@ void UI::updateTaskUI(TaskManager &taskManager)
     std::getline(std::cin, new_description);
 
     std::cout << "Enter new Due Date (leave empty to keep unchanged) (FORMAT - YEAR-MONTH-DAY): ";
-    std::getline(std::cin, new_duedate);
+    std::getline(std::cin, new_dueDate);
 
     std::cout << "Is the task completed? (1 for Yes, 0 for No) (leave empty to keep unchanged): ";
-    std::cin >> new_isCompleted;
+    std::getline(std::cin, new_isCompleted);
 
-    std::cout << "Enter priority (1 = HIGH, 2 = MEDIUM, 3 = LOW): ";
-    std::cin >> priority;
-    std::cin.ignore();
+    std::cout << "Enter new Priority (1 = HIGH, 2 = MEDIUM, 3 = LOW) (leave empty to keep unchanged): ";
+    std::getline(std::cin, new_priority);
 
-    if (taskManager.updateTasks(id, new_title, new_description, new_duedate, new_isCompleted, priority))
+    if (!new_title.empty())
     {
-        std::cout << " Task updated successfully!\n";
+        taskToUpdate->setTitle(new_title);
     }
-    else
+    if (!new_description.empty())
     {
-        std::cout << " Task with ID " << id << " not found.\n";
+        taskToUpdate->setDescription(new_description);
     }
+    if (!new_dueDate.empty())
+    {
+        taskToUpdate->setDueDate(new_dueDate);
+    }
+    if (!new_isCompleted.empty())
+    {
+        int completed = std::stoi(new_isCompleted);
+        if (completed == 1)
+            taskToUpdate->markComplete();
+        else if (completed == 0)
+            taskToUpdate->markIncomplete();
+    }
+    if (!new_priority.empty())
+    {
+        int prio = std::stoi(new_priority);
+        taskToUpdate->setPriority(prio);
+    }
+
+    if (WorkTask* workTask = dynamic_cast<WorkTask*>(taskToUpdate))
+    {
+        std::string new_project_title, new_project_description;
+        std::cout << "Enter new Project Title (leave empty to keep unchanged): ";
+        std::getline(std::cin, new_project_title);
+
+        std::cout << "Enter new Project Description (leave empty to keep unchanged): ";
+        std::getline(std::cin, new_project_description);
+
+        if (!new_project_title.empty())
+        {
+            workTask->setProjectTitle(new_project_title);
+        }
+        if (!new_project_description.empty())
+        {
+            workTask->setProjectDescription(new_project_description);
+        }
+    }
+
+    std::cout << "Task updated successfully!\n";
 }
+
 
 
 Task* UI::createTaskUI()

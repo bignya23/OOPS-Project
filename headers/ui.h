@@ -11,7 +11,7 @@ public:
     static int checkvalidchoice();
     static Task* createTaskUI();
     static WorkTask* createWorkTaskUI();
-    static void updateTaskUI(TaskManager& taskManager);
+    static void updateTaskUI(std::vector<Task*> &tasks);
     static void displayUserMenu();
     static int checkValidUserChoice();
 };

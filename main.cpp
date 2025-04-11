@@ -115,7 +115,8 @@ int main()
                 std::cout << "Task Added Successfully!" << std::endl;
                 break;
             case 2:
-                UI::updateTaskUI(*taskManager);
+                UI::updateTaskUI(tasks);
+                fileHandler->saveTasksToFile(tasks, "../files/" + username + ".txt");
                 break;
             case 3:
                 taskManager->deleteTasks(tasks);

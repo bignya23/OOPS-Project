@@ -78,6 +78,18 @@ void TaskManager::deleteTasks(std::vector<Task*> &tasks)
 
     std::vector<Task*> new_tasks;
 
+    bool isFound = false;
+    int taskId;
+    for(auto& task : tasks) {
+        if(task->getId() == id) {
+            isFound = true;
+            taskId = task->getId();
+        }
+    }
+    if(isFound == false) {
+        std::cout << "No Task with id " << taskId << "is Found\n";
+        return;
+    }
     for(auto& task : tasks) {
         if(task->getId() != id) {
             new_tasks.push_back(task);
