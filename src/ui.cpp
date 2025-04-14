@@ -9,7 +9,9 @@ void UI::getDisplayMenu()
     std::cout << "2. Update Task\n";
     std::cout << "3. Delete Task\n";
     std::cout << "4. Display Tasks\n";
-    std::cout << "5. Exit\n";
+    std::cout << "5. Show Pending Tasks\n";
+    std::cout << "6. Show Report\n";
+    std::cout << "7. Exit\n";
     std::cout << "-----------------------------\n";
 }
 void UI::displayUserMenu()
@@ -36,7 +38,7 @@ int UI::checkvalidchoice()
             std::cout << "Invalid input! Please enter a valid number.\n";
             continue;
         }
-        if (choice < 0 || choice > 5)
+        if (choice < 0 || choice > 7)
         {
             std::cout << "Invalid Choice. Please select a correct choice from the menu !!!\n";
             continue;
@@ -310,3 +312,53 @@ WorkTask *UI::createWorkTaskUI(std::vector<Task*> &tasks)
 
     return new WorkTask(id, title, description, dueDate, false, priority, projectName, projectDescription);
 }
+
+
+void UI::showPendingTasks(const std::vector<Task*>& tasks) {
+    std::cout << std::left << std::setw(25) << "Task Title"
+              << std::setw(15) << "Due Date" << std::endl;
+    std::cout << std::string(40, '-') << std::endl;
+    
+    for (const auto& task : tasks) {
+        if (!task->getStatus()) {
+            std::cout << std::left << std::setw(25) << task->getTitle()
+                      << std::setw(15) << task->getDueDate() << std::endl;
+        }
+    }
+}
+
+
+void UI::showProgressReport(const std::vector<Task*>& tasks)
+    {
+        int total = tasks.size();
+        int completed = 0;
+        int overdue = 0;
+        for (const auto& t : tasks)
+        {
+            if (t->getStatus())
+                completed++;
+            if (t->isOverdue())
+                overdue++;
+        }
+        int pending = total - completed;
+        double completionRate = total > 0 ? (static_cast<double>(completed) / total) * 100.0 : 0;
+
+        std::cout << "\n=== Progress Report ===\n";
+        std::cout << "Total tasks     : " << total << "\n";
+        std::cout << "Completed tasks : " << completed << "\n";
+        std::cout << "Pending tasks   : " << pending << "\n";
+        std::cout << "Overdue tasks   : " << overdue << "\n";
+        std::cout << "Completion Rate : " << completionRate << "%\n";
+
+        const int progressBarWidth = 50;
+        int pos = static_cast<int>((completionRate / 100.0) * progressBarWidth);
+        std::cout << "[";
+        for (int i = 0; i < progressBarWidth; ++i)
+        {
+            if (i < pos)
+                std::cout << "=";
+            else
+                std::cout << " ";
+        }
+        std::cout << "]\n";
+    }

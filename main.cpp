@@ -6,6 +6,7 @@
 #include "headers/TaskManager.h"
 #include "headers/UserManager.h"
 #include "headers/FileHandling.h"
+#include "headers/NotificationManager.h" 
 
 int main()
 {
@@ -71,6 +72,7 @@ int main()
     FileHandler *fileHandler = new FileHandler();
     std::vector<Task *> &tasks = taskManager->getTasks();
     fileHandler->loadTasksFromFile(tasks, "files/" + username + ".txt");
+    NotificationManager::startNotifications(tasks);
     fileHandler->saveTasksToFile(tasks, "files/" + username + ".txt");
 
     while (true)
@@ -110,16 +112,31 @@ int main()
                 }
                 taskManager->addTasks(newTask);
                 std::cout << "------------------------" << std::endl;
-                fileHandler->saveTasksToFile(tasks, "files/" + username + ".txt");
+                try {
+                    fileHandler->saveTasksToFile(tasks, "files/" + username + ".txt");
+                }
+                catch(const std::runtime_error &e) {
+                    std::cerr << "Runtime error: " << e.what() << std::endl;
+                }                
                 std::cout << "Task Added Successfully!" << std::endl;
                 break;
             case 2:
                 UI::updateTaskUI(tasks);
-                fileHandler->saveTasksToFile(tasks, "files/" + username + ".txt");
+                try {
+                    fileHandler->saveTasksToFile(tasks, "files/" + username + ".txt");
+                }
+                catch(const std::runtime_error &e) {
+                    std::cerr << "Runtime error: " << e.what() << std::endl;
+                }
                 break;
             case 3:
                 taskManager->deleteTasks(tasks);
-                fileHandler->saveTasksToFile(tasks, "files/" + username + ".txt");
+                try {
+                    fileHandler->saveTasksToFile(tasks, "files/" + username + ".txt");
+                }
+                catch(const std::runtime_error &e) {
+                    std::cerr << "Runtime error: " << e.what() << std::endl;
+                }     
                 break;
             case 4:
                 tasks.clear();
@@ -128,6 +145,12 @@ int main()
                 taskManager->displayTasks(tasks);
                 break;
             case 5:
+                UI::showPendingTasks(tasks);
+                break;
+            case 6:
+                UI::showProgressReport(tasks);
+                break;
+            case 7:
                 start = false;
                 std::cout << "Exiting Advanced Task Manager\n";
                 break;

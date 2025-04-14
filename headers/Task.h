@@ -43,6 +43,10 @@ public:
 
     bool isOverdue() const;
     virtual void display() const;
+
+    std::chrono::system_clock::time_point getDueTimePoint() const {
+        return due_date;
+    }
 };
 
 class WorkTask : public Task
