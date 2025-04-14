@@ -50,7 +50,8 @@ int UI::checkvalidchoice()
     return choice;
 }
 
-int UI::checkValidUserChoice() {
+int UI::checkValidUserChoice()
+{
 
     int choice;
 
@@ -80,25 +81,28 @@ int UI::checkValidUserChoice() {
     return choice;
 }
 
- 
-void UI::updateTaskUI(std::vector<Task*>& tasks)
+void UI::updateTaskUI(std::vector<Task *> &tasks)
 {
     int id;
     std::string input;
+    bool isId = false;
 
-    std::cout << "Enter Task ID to update: ";
-    std::cin >> id;
-    if (std::cin.fail())
+    while (!isId)
     {
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        std::cout << "Invalid input! Please enter a valid number.\n";
-        updateTaskUI(tasks);
-        return;
+        std::cout << "Enter Task ID to update: ";
+        std::cin >> id;
+        std::cin.ignore();
+        isId = true;
+        if (std::cin.fail())
+        {
+            isId = false;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Invalid input! Please enter a valid number.\n";
+        }
     }
-    std::cin.ignore(); 
 
-    Task* taskToUpdate = nullptr;
+    Task *taskToUpdate = nullptr;
     for (auto &task : tasks)
     {
         if (task->getId() == id)
@@ -157,7 +161,7 @@ void UI::updateTaskUI(std::vector<Task*>& tasks)
         taskToUpdate->setPriority(prio);
     }
 
-    if (WorkTask* workTask = dynamic_cast<WorkTask*>(taskToUpdate))
+    if (WorkTask *workTask = dynamic_cast<WorkTask *>(taskToUpdate))
     {
         std::string new_project_title, new_project_description;
         std::cout << "Enter new Project Title (leave empty to keep unchanged): ";
@@ -179,24 +183,34 @@ void UI::updateTaskUI(std::vector<Task*>& tasks)
     std::cout << "Task updated successfully!\n";
 }
 
-
-
-Task* UI::createTaskUI()
+Task *UI::createTaskUI(std::vector<Task*> &tasks) 
 {
     int id, priority = 3;
     std::string title, description, dueDate, projectName;
+    bool isId = false;
 
-    std::cout << "Enter Task ID: ";
-    std::cin >> id;
-    std::cin.ignore();
-
-    if (std::cin.fail())
+    while (!isId)
     {
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        std::cout << "Invalid input! Please enter a valid number.\n";
-        UI::createTaskUI();
+        std::cout << "Enter Task ID: ";
+        std::cin >> id;
+        std::cin.ignore();
+        isId = true;
+        if (std::cin.fail())
+        {
+            isId = false;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Invalid input! Please enter a valid number.\n";
+        }
+        for(auto& i : tasks) {
+            if(i->getId() == id) {
+                std::cout << "Task with ID " << id << " already exist.\n";
+                isId = false;
+            }
+        }
     }
+
+    
 
     std::cout << "Enter Title: ";
     std::getline(std::cin, title);
@@ -230,19 +244,32 @@ Task* UI::createTaskUI()
     return new Task(id, title, description, dueDate, false, priority);
 }
 
-WorkTask* UI::createWorkTaskUI() {
+WorkTask *UI::createWorkTaskUI(std::vector<Task*> &tasks)
+{
     int id, priority = 3;
     std::string title, description, dueDate, projectName, projectDescription;
 
-    std::cout << "Enter Task ID: ";
-    std::cin >> id;
-    std::cin.ignore();
+    bool isId = false;
 
-    if (std::cin.fail()) {
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-        std::cout << "Invalid input! Please enter a valid number.\n";
-        return UI::createWorkTaskUI();
+    while (!isId)
+    {
+        std::cout << "Enter Task ID: ";
+        std::cin >> id;
+        std::cin.ignore();
+        isId = true;
+        if (std::cin.fail())
+        {
+            isId = false;
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Invalid input! Please enter a valid number.\n";
+        }
+        for(auto& i : tasks) {
+            if(i->getId() == id) {
+                std::cout << "Task with ID " << id << " already exist.\n";
+                isId = false;
+            }
+        }
     }
 
     std::cout << "Enter Title: ";
@@ -254,18 +281,21 @@ WorkTask* UI::createWorkTaskUI() {
     std::cout << "Enter Due Date (FORMAT - YEAR-MONTH-DAY): ";
     std::getline(std::cin, dueDate);
 
-    while (true) {
+    while (true)
+    {
         std::cout << "Enter priority (1 = HIGH, 2 = MEDIUM, 3 = LOW): ";
         std::cin >> priority;
         std::cin.ignore();
 
-        if (std::cin.fail()) {
+        if (std::cin.fail())
+        {
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::cout << "Invalid input! Please enter a valid number between 1 and 3.\n";
             continue;
         }
-        if (priority < 1 || priority > 3) {
+        if (priority < 1 || priority > 3)
+        {
             std::cout << "Invalid input! Please enter a valid number between 1 and 3.\n";
             continue;
         }

@@ -25,6 +25,8 @@ void UserManager::saveUsersToFile(const std::string &filename) {
     }
 
     file.close();
+    std::cout << "User registered successfully!\n";
+
 }
 
 void UserManager::loadUsersFromFile(const std::string &filename) {

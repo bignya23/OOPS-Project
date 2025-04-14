@@ -9,8 +9,8 @@ class UI {
 public:
     static void getDisplayMenu();
     static int checkvalidchoice();
-    static Task* createTaskUI();
-    static WorkTask* createWorkTaskUI();
+    static Task* createTaskUI(std::vector<Task*> &tasks);
+    static WorkTask* createWorkTaskUI(std::vector<Task*> &tasks);
     static void updateTaskUI(std::vector<Task*> &tasks);
     static void displayUserMenu();
     static int checkValidUserChoice();

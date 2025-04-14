@@ -10,7 +10,7 @@
 int main()
 {
     UserManager userManager;
-    userManager.loadUsersFromFile("../files/users.txt");
+    userManager.loadUsersFromFile("files/users.txt");
 
     std::string username, password;
     bool login = false;
@@ -28,8 +28,7 @@ int main()
             std::cin >> password;
 
             userManager.addUser(username, password);
-            userManager.saveUsersToFile("../files/users.txt");
-            std::cout << "User registered successfully!\n";
+            userManager.saveUsersToFile("files/users.txt");
             break;
         case 2:
             std::cout << "Enter username: ";
@@ -71,8 +70,8 @@ int main()
     int taskType;
     FileHandler *fileHandler = new FileHandler();
     std::vector<Task *> &tasks = taskManager->getTasks();
-    fileHandler->loadTasksFromFile(tasks, "../files/" + username + ".txt");
-    fileHandler->saveTasksToFile(tasks, "../files/" + username + ".txt");
+    fileHandler->loadTasksFromFile(tasks, "files/" + username + ".txt");
+    fileHandler->saveTasksToFile(tasks, "files/" + username + ".txt");
 
     while (true)
     {
@@ -98,11 +97,11 @@ int main()
 
                 if (taskType == 1)
                 {
-                    newTask = UI::createTaskUI();
+                    newTask = UI::createTaskUI(tasks);
                 }
                 else if (taskType == 2)
                 {
-                    newTask = UI::createWorkTaskUI();
+                    newTask = UI::createWorkTaskUI(tasks);
                 }
                 else
                 {
@@ -111,20 +110,20 @@ int main()
                 }
                 taskManager->addTasks(newTask);
                 std::cout << "------------------------" << std::endl;
-                fileHandler->saveTasksToFile(tasks, "../files/" + username + ".txt");
+                fileHandler->saveTasksToFile(tasks, "files/" + username + ".txt");
                 std::cout << "Task Added Successfully!" << std::endl;
                 break;
             case 2:
                 UI::updateTaskUI(tasks);
-                fileHandler->saveTasksToFile(tasks, "../files/" + username + ".txt");
+                fileHandler->saveTasksToFile(tasks, "files/" + username + ".txt");
                 break;
             case 3:
                 taskManager->deleteTasks(tasks);
-                fileHandler->saveTasksToFile(tasks, "../files/" + username + ".txt");
+                fileHandler->saveTasksToFile(tasks, "files/" + username + ".txt");
                 break;
             case 4:
                 tasks.clear();
-                fileHandler->loadTasksFromFile(tasks, "../files/" + username + ".txt");
+                fileHandler->loadTasksFromFile(tasks, "files/" + username + ".txt");
                 taskManager->sortOnPriority(tasks);
                 taskManager->displayTasks(tasks);
                 break;

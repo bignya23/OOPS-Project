@@ -17,7 +17,7 @@ protected:
     int priority;
 
 public:
-    explicit Task::Task(int id, const std::string &title, const std::string &description,
+    explicit Task(int id, const std::string &title, const std::string &description,
                         const std::string &dueDate, bool isCompleted, int priority)
         : task_no(id), task_title(title), task_description(description),
           isCompleted(isCompleted), priority(priority)

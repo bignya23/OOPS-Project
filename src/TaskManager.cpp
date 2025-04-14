@@ -1,7 +1,7 @@
 #include "../headers/TaskManager.h"
 #include "../headers/Task.h"
 #include <algorithm>
-void TaskManager::addTasks(Task* new_task)
+void TaskManager::addTasks(Task *new_task)
 {
     tasks.push_back(new_task);
 }
@@ -36,7 +36,8 @@ bool TaskManager::updateTasks(int id, std::string new_title, std::string new_des
                     task->markIncomplete();
                 }
             }
-            if(new_priority <= 3 && new_priority >= 1) {
+            if (new_priority <= 3 && new_priority >= 1)
+            {
                 task->setPriority(new_priority);
             }
             return true;
@@ -45,9 +46,9 @@ bool TaskManager::updateTasks(int id, std::string new_title, std::string new_des
     return false;
 }
 
-void TaskManager::displayTasks(std::vector<Task*> &tasks)
-{   
-    
+void TaskManager::displayTasks(std::vector<Task *> &tasks)
+{
+
     if (tasks.empty())
     {
         std::cout << "No tasks available.\n";
@@ -62,7 +63,7 @@ void TaskManager::displayTasks(std::vector<Task*> &tasks)
     }
 }
 
-void TaskManager::deleteTasks(std::vector<Task*> &tasks)
+void TaskManager::deleteTasks(std::vector<Task *> &tasks)
 {
     if (tasks.empty())
     {
@@ -72,26 +73,38 @@ void TaskManager::deleteTasks(std::vector<Task*> &tasks)
 
     displayTasks(tasks);
     int id;
+
     std::cout << "Enter the id of the task to delete : ";
     std::cin >> id;
     std::cin.ignore();
+    if (std::cin.fail())
+    {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cout << "Invalid input! Please enter a valid number.\n";
+    }
 
-    std::vector<Task*> new_tasks;
+    std::vector<Task *> new_tasks;
 
     bool isFound = false;
     int taskId;
-    for(auto& task : tasks) {
-        if(task->getId() == id) {
+    for (auto &task : tasks)
+    {
+        if (task->getId() == id)
+        {
             isFound = true;
             taskId = task->getId();
         }
     }
-    if(isFound == false) {
+    if (isFound == false)
+    {
         std::cout << "No Task with id " << taskId << "is Found\n";
         return;
     }
-    for(auto& task : tasks) {
-        if(task->getId() != id) {
+    for (auto &task : tasks)
+    {
+        if (task->getId() != id)
+        {
             new_tasks.push_back(task);
         }
     }
@@ -100,14 +113,13 @@ void TaskManager::deleteTasks(std::vector<Task*> &tasks)
     std::cout << "Task Deleted Successfully !!!\n";
 }
 
-
-void TaskManager::sortOnPriority(std::vector<Task*> &tasks) {
-    sort(tasks.begin(), tasks.end(), [&](Task* first, Task* second) {
-        return first->getPriority() < second->getPriority();
-    });
+void TaskManager::sortOnPriority(std::vector<Task *> &tasks)
+{
+    sort(tasks.begin(), tasks.end(), [&](Task *first, Task *second)
+         { return first->getPriority() < second->getPriority(); });
 }
 
-
-std::vector<Task*>& TaskManager::getTasks() {
+std::vector<Task *> &TaskManager::getTasks()
+{
     return tasks;
 }
